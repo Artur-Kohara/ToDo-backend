@@ -17,6 +17,11 @@ export class TasksService {
         return this.tasks;
     }
 
+    find(id: number) {
+        const task = this.tasks.find(t => t.id === id);
+        return task;
+    }
+
     create(title: string, description: string) {    // Os parâmetros passados como entrada são os que serão editados pelo usuário
         const task: Task = {
             id: Date.now(),
