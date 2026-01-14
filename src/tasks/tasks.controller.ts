@@ -24,9 +24,9 @@ export class TasksController {
     @Patch(':id')
     update(
         @Param('id') id: string,
-        @Body('title') title: string,
-        @Body('description') description: string,
-        @Body('completed') completed: string){
+        @Body('title') title?: string,
+        @Body('description') description?: string,
+        @Body('completed') completed?: string){
             return this.tasksService.update(Number(id), title, description, completed);
         }
 

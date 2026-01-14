@@ -33,13 +33,21 @@ export class TasksService {
         return task;                      
     }
 
-    update(id: number, title: string, description: string, completed: string) {
+    update(id: number, title?: string, description?: string, completed?: string) {
         const task = this.tasks.find(t => t.id === id);    // Acha uma tarefa pelo id para editá-la
         if (!task) return null;
 
-        task.title = title;
-        task.description = description;
-        task.completed = completed;
+        if (title !== undefined){
+            task.title = title;
+        }
+        
+        if (description !== undefined){
+            task.description = description;
+        }
+
+        if (completed !== undefined){
+            task.completed = completed;
+        }    
 
         return task;
     }
