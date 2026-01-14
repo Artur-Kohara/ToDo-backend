@@ -24,6 +24,7 @@ export class TasksController {
     @Patch(':id')
     update(
         @Param('id') id: string,
+        // As interrogações servem para não haver obrigatoriedade de preencher tal parâmetro
         @Body('title') title?: string,
         @Body('description') description?: string,
         @Body('completed') completed?: string){

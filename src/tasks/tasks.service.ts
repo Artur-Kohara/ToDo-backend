@@ -33,10 +33,11 @@ export class TasksService {
         return task;                      
     }
 
-    update(id: number, title?: string, description?: string, completed?: string) {
+    update(id: number, title?: string, description?: string, completed?: string) {  // As interrogações servem para não haver obrigatoriedade de preencher tal parâmetro
         const task = this.tasks.find(t => t.id === id);    // Acha uma tarefa pelo id para editá-la
         if (!task) return null;
 
+        // As condicionais servem para salvar os valores antigos dos parâmetros caso eles não sejam atualizados
         if (title !== undefined){
             task.title = title;
         }
