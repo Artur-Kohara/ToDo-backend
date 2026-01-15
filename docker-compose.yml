@@ -1,3 +1,5 @@
+# Cria container Docker para utilizar o PostgreSQL para gerar o banco de dados
+
 version: "3.9"
 
 services:
