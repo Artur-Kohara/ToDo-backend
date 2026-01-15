@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Injectable } from '@nestjs/common';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 export interface Task {
   id: number;
@@ -10,50 +11,38 @@ export interface Task {
 
 @Injectable()
 export class TasksService {
-    private tasks: Task[] = []; // Cria uma lista de tarefas
+    //Inclui um constructor para usar o prisma como banco de dados
+    constructor (private prisma: PrismaService) {}
 
-    // Método para encontrar todas as tarefas criadas
+    // Utiliza funções que serão criadas pelo Prisma dentro dos métodos
+    // Agora não se manipula mais uma lista de tarefas diretmanete
+    // O Prisma agora é o responsável por manipular os dados
     findAll() {
-        return this.tasks;
+        return this.prisma.task.findMany();
     }
 
     find(id: number) {
-        const task = this.tasks.find(t => t.id === id);
-        return task;
+        return this.prisma.task.findUnique({
+            where: {id},
+        });
     }
 
-    create(title: string, description: string) {    // Os parâmetros passados como entrada são os que serão editados pelo usuário
-        const task: Task = {
-            id: Date.now(),
-            title,
-            description,
-            completed: "To do"
-        };
-        this.tasks.push(task);  // Adiciona a tarefa à lista de tarefas  
-        return task;                      
+    create(title: string, description: string) {
+        return this.prisma.task.create({
+            data: {title, description},
+        });
     }
 
     update(id: number, title?: string, description?: string, completed?: string) {  // As interrogações servem para não haver obrigatoriedade de preencher tal parâmetro
-        const task = this.tasks.find(t => t.id === id);    // Acha uma tarefa pelo id para editá-la
-        if (!task) return null;
-
-        // As condicionais servem para salvar os valores antigos dos parâmetros caso eles não sejam atualizados
-        if (title !== undefined){
-            task.title = title;
-        }
-        
-        if (description !== undefined){
-            task.description = description;
-        }
-
-        if (completed !== undefined){
-            task.completed = completed;
-        }    
-
-        return task;
+        return this.prisma.task.update({
+            where: {id},
+            data: {title, description, completed},
+        });
     }
 
     remove(id: number) {
-        this.tasks = this.tasks.filter(t => t.id !== id)    // Filtra a lista de tarefas excluindo a tarefa com o id especificado
+        return this.prisma.task.delete({
+            where: {id},
+        });
     }
 }
