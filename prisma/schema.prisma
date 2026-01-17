@@ -5,8 +5,7 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -16,9 +15,9 @@ datasource db {
 
 // Cria modelo de estrutura das tarefas no banco de dados
 model Task {
-  id         Int      @id @default(autoincrement())
-  title      String
-  desciption String
-  completed  String
-  createdAt  DateTime @default(now())
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  completed   String
+  createdAt   DateTime @default(now())
 }

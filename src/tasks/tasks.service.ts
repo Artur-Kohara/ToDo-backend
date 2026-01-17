@@ -29,7 +29,7 @@ export class TasksService {
 
     create(title: string, description: string) {
         return this.prisma.task.create({
-            data: {title, description},
+            data: {title, description, completed: 'to do'},
         });
     }
 
