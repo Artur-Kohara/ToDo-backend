@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Delete, Patch, Param, Body } from '@nestjs/common';  // É preciso importar os métodos HTTP que serão usados
+import { Controller, Get, Post, Delete, Patch, Param, Body, Query } from '@nestjs/common';  // É preciso importar os métodos HTTP que serão usados
 import { TasksService } from './tasks.service';
 import { title } from 'process';
 
@@ -7,33 +7,30 @@ export class TasksController {
     constructor(private readonly tasksService: TasksService) {} // Cria a classe de serviço para as tarefas
 
     @Get()
-    findAll() {
-        return this.tasksService.findAll();
-    }
-
-    @Get(':id')
-    find(@Param('id') id: string) {
-        return this.tasksService.find(Number(id));  // @Param sempre retorna string, logo é preciso converter para número
+    findAll(@Query('completed') completed?: string) {
+        return this.tasksService.findAll(
+            // Caso completed seja diferente de undefined, usa o parâmetro completed como filtro
+            // Caso contrário, acha todas as tarefas
+            completed !== undefined ? completed === 'true' : undefined
+        );
     }
 
     @Post()
-    create(@Body('title') title: string, @Body('description') description: string) {
-        return this.tasksService.create(title, description);
+    create(@Body('title') title: string) {
+        return this.tasksService.create(title);
     }
 
     @Patch(':id')
-    update(
-        @Param('id') id: string,
-        // As interrogações servem para não haver obrigatoriedade de preencher tal parâmetro
-        @Body('title') title?: string,
-        @Body('description') description?: string,
-        @Body('completed') completed?: string){
-            return this.tasksService.update(Number(id), title, description, completed);
-        }
+    update(@Param('id') id: string, @Body('completed') completed: boolean) {
+        return this.tasksService.update(Number(id), completed);
+    }
 
-    @Delete(':id')
-    remove(@Param('id') id: string) {
-        return this.tasksService.remove(Number(id));
+    @Delete()
+    removeAll(@Query('completed') completed?: string) {
+        if (completed !== undefined) {
+            return this.tasksService.removeCompleted(completed === 'true');
+        }
+        return this.tasksService.removeAll();
     }
 }
 

@@ -5,8 +5,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export interface Task {
   id: number;
   title: string;
-  description: string;
-  completed: string
+  completed: boolean;
 }
 
 @Injectable()
@@ -17,32 +16,34 @@ export class TasksService {
     // Utiliza funções que serão criadas pelo Prisma dentro dos métodos
     // Agora não se manipula mais uma lista de tarefas diretmanete
     // O Prisma agora é o responsável por manipular os dados
-    findAll() {
-        return this.prisma.task.findMany();
-    }
-
-    find(id: number) {
-        return this.prisma.task.findUnique({
-            where: {id},
+    findAll(completed?: boolean) {
+        return this.prisma.task.findMany({
+            // Caso seja especificado que a tarefa foi completada ou não, ele usa o completed para filtrar
+            // Caso contrário, ele acha todas as tarefas (é uma condicional basicamente)
+            where: completed !== undefined ? {completed} : {},
         });
     }
 
-    create(title: string, description: string) {
+    create(title: string) {
         return this.prisma.task.create({
-            data: {title, description, completed: 'to do'},
+            data: {title},
         });
     }
 
-    update(id: number, title?: string, description?: string, completed?: string) {  // As interrogações servem para não haver obrigatoriedade de preencher tal parâmetro
+    update(id: number, completed: boolean) {
         return this.prisma.task.update({
             where: {id},
-            data: {title, description, completed},
+            data: {completed},
         });
     }
 
-    remove(id: number) {
-        return this.prisma.task.delete({
-            where: {id},
-        });
+    removeAll() {
+        return this.prisma.task.deleteMany();
+    }
+
+    removeCompleted(completed: boolean) {
+        return this.prisma.task.deleteMany({
+            where: {completed},
+        })
     }
 }

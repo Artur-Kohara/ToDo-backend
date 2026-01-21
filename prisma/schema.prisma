@@ -15,9 +15,7 @@ datasource db {
 
 // Cria modelo de estrutura das tarefas no banco de dados
 model Task {
-  id          Int      @id @default(autoincrement())
-  title       String
-  description String
-  completed   String
-  createdAt   DateTime @default(now())
+  id        Int     @id @default(autoincrement())
+  title     String
+  completed Boolean @default(false)
 }
